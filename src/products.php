@@ -158,7 +158,7 @@
           <button type="submit" class="btn btn-primary">Search</button>
         </div>
         <div class="col-12">
-          <a class="btn btn-success" href="add-product.html">Add Product</a>
+          <a class="btn btn-success" href="add-product.php">Add Product</a>
         </div>
       </form>
       <div class="table-responsive">
