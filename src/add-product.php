@@ -1,4 +1,5 @@
 <?php
+include "classes/utils.php";
 session_start();
 if (isset($_SESSION["user"])) {
   if ($_SESSION["user"] != "admin@store.com") {
@@ -53,10 +54,10 @@ if (isset($_SESSION["user"])) {
     <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search" required>
     <div class="navbar-nav">
       <div class="nav-item text-nowrap">
-        <a class="nav-link px-3" href="#">Sign out</a>
+        <a class="nav-link px-3" href="php/logout.php">Sign out</a>
       </div>
     </div>
   </header>
@@ -69,7 +70,7 @@ if (isset($_SESSION["user"])) {
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="dashboard.html">
                 <span data-feather="home"></span>
-                Dashboard
+                AddProduct
               </a>
             </li>
             <li class="nav-item">
@@ -121,49 +122,55 @@ if (isset($_SESSION["user"])) {
           </div>
         </div>
 
-        <form class="row g-3">
+        <form class="row g-3" method="post">
           <div class="col-md-6">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4">
+            <label for="inputEmail4" class="form-label">Product Name</label>
+            <input type="text" name="productName" class="form-control" id="inputEmail4" required>
           </div>
           <div class="col-md-6">
-            <label for="inputPassword4" class="form-label">Password</label>
-            <input type="password" class="form-control" id="inputPassword4">
+            <label for="inputPassword4" class="form-label">Product Price</label>
+            <input type="text" name="productPrice" class="form-control" id="inputPassword4" required>
           </div>
           <div class="col-12">
-            <label for="inputAddress" class="form-label">Address</label>
-            <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-          </div>
-          <div class="col-12">
-            <label for="inputAddress2" class="form-label">Address 2</label>
-            <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            <label for="inputAddress" class="form-label">Product Quantity</label>
+            <input type="text" name="productQuantity" class="form-control" id="inputAddress" required>
           </div>
           <div class="col-md-6">
-            <label for="inputCity" class="form-label">City</label>
-            <input type="text" class="form-control" id="inputCity">
+            <label for="inputCity" class="form-label">Product Rating</label>
+            <input type="number" name="productRating" min="1" class="form-control" id="inputCity" required>
           </div>
           <div class="col-md-4">
             <label for="inputState" class="form-label">State</label>
-            <select id="inputState" class="form-select">
-              <option selected>Choose...</option>
-              <option>...</option>
+            <select id="inputState" name="productCategory" class="form-select" required>
+              <option selected>choose</option>
+              <option value="electronics">electronics</option>
+              <option value="fashion">fashion</option>
+              <option value="food">food</option>
+              <option value="sports">sports</option>
             </select>
           </div>
-          <div class="col-md-2">
-            <label for="inputZip" class="form-label">Zip</label>
-            <input type="text" class="form-control" id="inputZip">
-          </div>
-          <div class="col-12">
+          <!-- <div class="col-12">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="gridCheck">
               <label class="form-check-label" for="gridCheck">
                 Check me out
               </label>
             </div>
-          </div>
+          </div> -->
           <div class="col-12">
-            <button type="submit" class="btn btn-primary">Add Product</button>
+            <button type="submit" name="submit" class="btn btn-primary">Add Product</button>
           </div>
+          <?php
+          if (isset($_POST["submit"])) {
+            $util = new Util();
+            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"]);
+            if ($result) {
+              echo "<div class='p-3 rounded-lg text-success bg-light'>product added successfully</div>";
+            } else {
+              echo "<div class='p-3 rounded-lg text-danger bg-light'>error adding product</div>";
+            }
+          }
+          ?>
         </form>
       </main>
     </div>

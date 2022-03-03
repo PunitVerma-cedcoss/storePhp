@@ -3,6 +3,7 @@ require "classes/utils.php";
 session_start();
 if (isset($_SESSION["user"])) {
   print_r($_SESSION);
+  header("location:add-product.php");
 }
 ?>
 <!doctype html>
