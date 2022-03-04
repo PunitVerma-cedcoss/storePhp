@@ -2,8 +2,7 @@
 require "classes/utils.php";
 session_start();
 if (isset($_SESSION["user"])) {
-  print_r($_SESSION);
-  header("location:add-product.php");
+  header("location:dashboard.php");
 }
 ?>
 <!doctype html>
@@ -76,7 +75,7 @@ if (isset($_SESSION["user"])) {
             echo "<div class='p-3 text-danger bg-light rounded'>email/password incorrect</div>";
             break;
           case "ok":
-            header("location:products.php");
+            header("location:dashboard.php");
         }
       }
       ?>

@@ -67,36 +67,44 @@ session_start();
                 Dashboard
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="file"></span>
-                Orders
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="products.html">
-                <span data-feather="shopping-cart"></span>
-                Products
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="users"></span>
-                Customers
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="bar-chart-2"></span>
-                Reports
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                <span data-feather="layers"></span>
-                Integrations
-              </a>
-            </li>
+            <?php if ($_SESSION["data"]["type"] == "admin") { ?>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="file"></span>
+                  Orders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="products.html">
+                  <span data-feather="shopping-cart"></span>
+                  Products
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="add-product.php">
+                  <span data-feather="shopping-cart"></span>
+                  Add Products
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="users"></span>
+                  Customers
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="bar-chart-2"></span>
+                  Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="layers"></span>
+                  Integrations
+                </a>
+              </li>
+            <?php } ?>
           </ul>
         </div>
       </nav>
@@ -104,16 +112,18 @@ session_start();
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Dashboard</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group me-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+          <?php if ($_SESSION["data"]["type"] == "admin") { ?>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span>
+                This week
+              </button>
             </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-              <span data-feather="calendar"></span>
-              This week
-            </button>
-          </div>
+          <?php } ?>
         </div>
         <?php
         if ($_SESSION["type"] == "admin") {
@@ -142,7 +152,7 @@ session_start();
               $ctr = 0;
               $markup .= "<tr>";
               foreach ($product as $details) {
-                if ($ctr < 5) {
+                if ($ctr < 7) {
                   $markup .= "<td>" . $details . "</td>";
                 } else {
                   $markup .= "<td>";
@@ -217,18 +227,23 @@ session_start();
 
             <!-- show profile if user is not admin -->
 
-            <form class="row g-3" method="post">
-              <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">User Name</label>
-                <input type="text" name="productName" class="form-control" id="inputEmail4" value="<?php echo $_SESSION["data"]["userName"]; ?>" required>
+            <form class="row g-3 updateProfileForm" method="post">
+              <div class="col-lg-2 col-md-4 d-flex justify-content-center align-items-center ">
+                <div class="profilepic bg-primary rounded-circle d-flex justify-content-center align-items-center text-white font-weight-bold display-2" style="width: 100px;height:100px">
+                  <p><?php echo $_SESSION["data"]["userName"][0] ?></p>
+                </div>
               </div>
-              <div class="col-md-6">
+              <div class="col-lg-10 col-md-8">
+                <label for="inputEmail4" class="form-label">User Name</label>
+                <input type="text" name="userName" class="form-control" id="inputEmail4" value="<?php echo $_SESSION["data"]["userName"]; ?>" required>
+              </div>
+              <div class="col-md-12">
                 <label for="inputPassword4" class="form-label">Email</label>
-                <input type="text" name="productPrice" class="form-control" id="inputPassword4" value="<?php echo $_SESSION["data"]["email"]; ?>" required>
+                <input type="text" name="email" class="form-control" id="inputPassword4" value="<?php echo $_SESSION["data"]["email"]; ?>" required>
               </div>
               <div class="col-12">
                 <label for="inputAddress" class="form-label">Password</label>
-                <input type="text" name="productQuantity" value="<?php echo $_SESSION["data"]["password"]; ?>" class="form-control" id="inputAddress" required>
+                <input type="text" name="password" value="<?php echo $_SESSION["data"]["password"]; ?>" class="form-control" id="inputAddress" required>
               </div>
               <!-- <div class="col-12">
             <div class="form-check">
@@ -239,17 +254,13 @@ session_start();
             </div>
           </div> -->
               <div class="col-12">
-                <button type="submit" name="submit" class="btn btn-primary">Update Profile</button>
+                <button type="submit" id="updateProfile" name="updateProfile" class="btn btn-primary">Update Profile</button>
+                <div class="profileMsg"></div>
               </div>
+              <!-- handling update profile button -->
               <?php
-              if (isset($_POST["submit"])) {
-                $util = new Util();
-                $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"]);
-                if ($result) {
-                  echo "<div class='p-3 rounded-lg text-success bg-light'>product added successfully</div>";
-                } else {
-                  echo "<div class='p-3 rounded-lg text-danger bg-light'>error adding product</div>";
-                }
+              if (isset($_POST["updateProfile"])) {
+                print_r($_POST);
               }
               ?>
             </form>

@@ -17,7 +17,9 @@ if (isset($_SESSION["user"])) {
   <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
   <meta name="generator" content="Hugo 0.88.1">
   <title>Dashboard Template · Bootstrap v5.1</title>
-
+  <!-- Jquery CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous"></script>
+  <script src="js/main.js" defer></script>
   <link rel="canonical" href="https://getbootstrap.com/docs/5.1/examples/dashboard/">
 
 
@@ -80,13 +82,13 @@ if (isset($_SESSION["user"])) {
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="products.php">
                 <span data-feather="shopping-cart"></span>
                 Products
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="customers.php">
                 <span data-feather="users"></span>
                 Customers
               </a>
@@ -121,8 +123,11 @@ if (isset($_SESSION["user"])) {
             </button>
           </div>
         </div>
-
-        <form class="row g-3" method="post">
+        <form class="row g-3" method="post" enctype="multipart/form-data">
+          <div class="col-md-12">
+            <label for="images" class="form-label">Product Images</label>
+            <input type="file" name="images[]" class="form-control" accept="image/*" id="imagesu" multiple required>
+          </div>
           <div class="col-md-6">
             <label for="inputEmail4" class="form-label">Product Name</label>
             <input type="text" name="productName" class="form-control" id="inputEmail4" required>
@@ -137,17 +142,36 @@ if (isset($_SESSION["user"])) {
           </div>
           <div class="col-md-6">
             <label for="inputCity" class="form-label">Product Rating</label>
-            <input type="number" name="productRating" min="1" class="form-control" id="inputCity" required>
+            <input type="text" name="productRating" min="1" class="form-control" id="inputCity" required>
           </div>
           <div class="col-md-4">
-            <label for="inputState" class="form-label">State</label>
-            <select id="inputState" name="productCategory" class="form-select" required>
-              <option selected>choose</option>
-              <option value="electronics">electronics</option>
-              <option value="fashion">fashion</option>
-              <option value="food">food</option>
-              <option value="sports">sports</option>
-            </select>
+            <label for="inputState" class="form-label">Product Category</label>
+            <div class="d-flex">
+              <select id="inputState" name="productCategory" class="form-select categories" required>
+                <option selected>choose</option>
+                <?php
+                $util1 = new Util();
+                foreach ($util1->getCategories() as $product) {
+                  if ($product["category"] != "Array")
+                    echo '<option value="' . $product["category"] . '">' . $product["category"] . '</option>';
+                }
+                ?>
+                <!-- <option value="electronics">electronics</option>
+                <option value="fashion">fashion</option>
+                <option value="food">food</option>
+                <option value="sports">sports</option> -->
+              </select>
+              <a href="#" class="btn btn-primary ms-2 px-3 addCategory">+</a>
+            </div>
+            <div class="col-md-12 mt-2 d-flex addCategories d-none">
+              <input type="text" name="addcategory" class="form-control" id="inputCity">
+              <a href="#" class="btn btn-primary ms-2 btnAddCategory">Add Category</a>
+            </div>
+
+          </div>
+          <div class="col-md-12">
+            <label for="productDesc" class="form-label">Product Description</label>
+            <textarea name="productDesc" rows="3" class="form-control" id="productDesc" required></textarea>
           </div>
           <!-- <div class="col-12">
             <div class="form-check">
@@ -160,14 +184,45 @@ if (isset($_SESSION["user"])) {
           <div class="col-12">
             <button type="submit" name="submit" class="btn btn-primary">Add Product</button>
           </div>
+          <div class="notification"></div>
           <?php
+          $images_paths = [];
+          function is_image($path)
+          {
+            $a = getimagesize($path);
+            $image_type = $a[2];
+
+            if (in_array($image_type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP))) {
+              return true;
+            }
+            return false;
+          }
+          // if click add product
           if (isset($_POST["submit"])) {
+
+            $ctr = 0;
+            for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
+              if (is_image($_FILES["images"]["tmp_name"][$i]))
+                $ctr++;
+            }
+            if ($ctr == count($_FILES["images"]["name"])) {
+              //all images are validated
+              for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
+                $target_dir = "images/";
+                $image_format = explode(".", basename($_FILES["images"]["name"][$i]))[1];
+                $target_file = $target_dir . random_int(0, 10000000000000000) . "." . $image_format;
+                if (move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_file)) {
+                  array_push($images_paths, $target_file);
+                }
+              }
+            }
+            $imagesString = implode(",", $images_paths);
             $util = new Util();
-            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"]);
+            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"], $imagesString, $_POST["productDesc"]);
             if ($result) {
-              echo "<div class='p-3 rounded-lg text-success bg-light'>product added successfully</div>";
+              echo "<div class='p-3 rounded-lg text-success bg-light notification'>product added successfully</div>";
             } else {
-              echo "<div class='p-3 rounded-lg text-danger bg-light'>error adding product</div>";
+              echo "<div class='p-3 rounded-lg text-danger bg-light notification'>error adding product</div>";
             }
           }
           ?>

@@ -17,5 +17,24 @@ if (isset($_POST["action"])) {
             echo "error";
         }
         // echo "cool";
+    } else if ($_POST["action"] == "updateProfile") {
+        if ($util->updateProfile($_POST)) {
+            echo "success";
+        } else {
+            echo "error";
+        }
+    } else if ($_POST["action"] == "addCategory") {
+        if ($util->addCategory($_POST["category"])) {
+            echo "success";
+        } else {
+            echo "error";
+        }
+    } else if ($_POST["action"] == "pagination") {
+        print_r(json_encode($util->pagination($_POST["offset"])));
+        // if ($util->addCategory($_POST["offset"])) {
+        //     echo "success";
+        // } else {
+        //     echo "error";
+        // }
     }
 }
