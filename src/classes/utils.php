@@ -32,9 +32,9 @@ class Util extends DB
             return "error";
         }
     }
-    public function addProduct($productName, $productPrice, $productQuantity, $productCategory, $productRating, $productImages, $productDesc)
+    public function addProduct($productName, $productPrice, $productQuantity, $productCategory, $productRating, $productImages, $productDesc, $productTags)
     {
-        $sql = "INSERT INTO `Products` (`id`, `product_name`, `product_price`, `product_quantity`, `product_category`, `product_uploader`, `product_images`, `product_desc`, `product_rating`) VALUES (NULL, '$productName', '$productPrice', '$productQuantity', '$productCategory', '" . $_SESSION["user"] . "', '$productImages', '$productDesc', '$productRating');";
+        $sql = "INSERT INTO `Products` (`id`, `product_name`, `product_price`, `product_quantity`, `product_category`, `product_uploader`, `product_images`, `product_desc`, `product_rating`, `product_tags`) VALUES (NULL, '$productName', '$productPrice', '$productQuantity', '$productCategory', '" . $_SESSION["user"] . "', '$productImages', '$productDesc', '$productRating', '$productTags');";
         try {
             DB::getInstance()->exec($sql);
             return true;
@@ -201,6 +201,59 @@ class Util extends DB
         } catch (PDOException $e) {
             echo $e;
             return "error";
+        }
+    }
+    public function getProductById($id)
+    {
+        try {
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * from Products WHERE id='$id'");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function query($sql)
+    {
+        try {
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function deleteProduct($id)
+    {
+        if ($_SESSION["user"] == "admin@store.com") {
+            $sql = "DELETE FROM Products WHERE id = '$id'";
+            try {
+                DB::getInstance()->exec($sql);
+                return true;
+            } catch (PDOException $e) {
+                echo $e;
+                return false;
+            }
+        } else "user is not admin";
+    }
+    public function updateProduct($id, $product_name, $product_price, $product_quantity, $product_category, $product_images, $product_desc, $product_rating, $product_tags)
+    {
+        try {
+            DB::getInstance()->exec("UPDATE `Products` SET `product_name` = '$product_name', `product_price` = '$product_price', `product_quantity` = '$product_quantity', `product_category` = '$product_category', `product_images` = '$product_images', `product_desc` = '$product_desc', `product_rating` = '$product_rating', `product_tags` = '$product_tags' WHERE `Products`.`id` = $id;");
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
         }
     }
 }

@@ -31,10 +31,13 @@ if (isset($_POST["action"])) {
         }
     } else if ($_POST["action"] == "pagination") {
         print_r(json_encode($util->pagination($_POST["offset"])));
-        // if ($util->addCategory($_POST["offset"])) {
-        //     echo "success";
-        // } else {
-        //     echo "error";
-        // }
+    } else if ($_POST["action"] == "getTotalPages") {
+        print_r(ceil($util->countPages()[0]["count"] / 5));
+    } else if ($_POST["action"] == "deleteProduct") {
+        if ($util->deleteProduct($_POST["id"])) {
+            echo "success";
+        } else {
+            echo "error";
+        }
     }
 }

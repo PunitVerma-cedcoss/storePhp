@@ -92,6 +92,12 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link" href="add-product.php">
+                <span data-feather="shopping-cart"></span>
+                Add Products
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#">
                 <span data-feather="users"></span>
                 Customers
@@ -168,9 +174,6 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
               <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Enter id,name...">
             </div>
           </div>
-
-
-
           <div class="col-12">
             <button type="submit" class="btn btn-primary">Search</button>
           </div>
@@ -191,7 +194,7 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
           <li class="page-item prev"><a class="page-link" href="#">Previous</a></li>
           ';
 
-          for ($i = 1; $i < $pages+1; $i++) {
+          for ($i = 1; $i < $pages + 1; $i++) {
             $markup .= '
           <li class="page-item" data="' . ($i - 1) . '"><a class="page-link" href="#">' . $i . '</a></li>
             ';
@@ -204,59 +207,8 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
           ';
 
           echo $markup;
-
-          // $util = new Util();
-          // $result =  $util->getAllProducts();
-          // echo "
-          //   <table class='table table-striped table-sm'>
-          //     <thead>
-          //     <tr>
-          //   ";
-          // foreach (array_keys($result[0]) as $keys) {
-          //   if ($keys != "product_images")
-          //     echo '        
-          //         <th scope="col">' . $keys . '</th>';
-          // }
-          // echo '        
-          // <th scope="col">Edit/Delete</th>';
-          // echo "
-          //   </tr>
-          //   </thead>
-          //   <tbody>
-          //   ";
-
-          // foreach ($result as $product) {
-          //   echo "<tr>";
-          //   foreach ($product as $k => $detail) {
-          //     if ($k == 'product_rating') {
-          //       echo "<td>";
-          //       for ($i = 0; $i < (int) $detail; $i++) {
-          //         echo "<i class='fa fa-star'>00</i>";
-          //       }
-          //       echo "</td>";
-          //     } else {
-          //       if ($k != "product_images")
-          //         echo '  
-          //           <td>' . $detail . '</td>';
-          //     }
-          //   }
-          //   echo '
-          //     <td><a href="#" data="' . $product["id"] . '" class="productEdit">Edit</a>&nbsp;<a href="#" class="productDelete" data="' . $product["id"] . '">Delete</a></td>
-          //     </tr>';
-          // }
-          // echo "</tbody>
-          //         </table>
-          //   ";
           ?>
-          <!-- <nav aria-label="Page navigation example">
-            <ul class="pagination">
-              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-          </nav> -->
+          <div class="msg"></div>
         </div>
       </main>
     </div>

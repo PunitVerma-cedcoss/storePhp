@@ -117,21 +117,23 @@ function pagination(offset) {
                         <th>Product Desc</th>
                         <th>Product rating</th>
                         <th>Product images</th>
+                        <th>Edit/Delete</th>
                     </tr>
                 <tbody>
             `
             data.forEach(i => {
                 markup += `
                 <tr>
-                <th>${i.id}</th>
-                <th>${i.product_name}</th>
-                <th>${i.product_price}</th>
-                <th>${i.product_quantity}</th>
-                <th>${i.product_category}</th>
-                <th>${i.product_images}</th>
-                <th>${i.product_desc}</th>
-                <th>${i.product_rating}</th>
-                <th>${i.product_uploader}</th>
+                <td>${i.id}</td>
+                <td>${i.product_name}</td>
+                <td>${i.product_price}</td>
+                <td>${i.product_quantity}</td>
+                <td>${i.product_category}</td>
+                <td>${i.product_images.split(",").join("\n")}</td>
+                <td>${i.product_desc.length > 50 ? i.product_desc.substr(0, 50) + "..." : i.product_desc}</td>
+                <td>${i.product_rating}</td>
+                <td>${i.product_uploader}</td>
+                <td><a href="editProduct.php?productId=${i.id}">Edit</a> <a href="#" class="deleteProduct" data="${i.id}">Delete</a></td>
                 </tr>
                 `
                 console.log(i)
@@ -145,7 +147,31 @@ function pagination(offset) {
     });
 }
 
+$("body").on("click", ".deleteProduct", function () {
+    deleteProduct($(this).attr("data"), $(this))
+});
 
+function deleteProduct(id, ref) {
+    console.log(id)
+    $.ajax({
+        type: "post",
+        url: "../ajax.php",
+        data: { "action": "deleteProduct", "id": id },
+        success: function (response) {
+            if (response == "success") {
+                $(".msg").html(`
+                <div class="p-3 text-success rounded-lg bg-light">Product deleted successfully</div>
+                `);
+                ref.parent().parent().remove()
+            }
+            else {
+                $(".msg").html(`
+                <div class="p-3 text-danger rounded-lg bg-light">error deleting product</div>
+                `);
+            }
+        }
+    });
+}
 
 
 var current = 1

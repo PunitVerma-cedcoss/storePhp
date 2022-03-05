@@ -70,7 +70,13 @@ if (isset($_SESSION["user"])) {
         <div class="position-sticky pt-3">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="dashboard.html">
+              <a class="nav-link" href="dashboard.php">
+                <span data-feather="shopping-cart"></span>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">
                 <span data-feather="home"></span>
                 AddProduct
               </a>
@@ -168,10 +174,19 @@ if (isset($_SESSION["user"])) {
               <a href="#" class="btn btn-primary ms-2 btnAddCategory">Add Category</a>
             </div>
 
+            <div class="col-md-12 mt-2 d-flex addCategories d-none">
+              <input type="text" name="addcategory" class="form-control" id="inputCity">
+              <a href="#" class="btn btn-primary ms-2 btnAddCategory">Add Category</a>
+            </div>
+
           </div>
           <div class="col-md-12">
             <label for="productDesc" class="form-label">Product Description</label>
             <textarea name="productDesc" rows="3" class="form-control" id="productDesc" required></textarea>
+          </div>
+          <div class="col-md-12">
+            <label for="productTags" class="form-label">Product Tags</label>
+            <input text="text" name="productTags" rows="3" class="form-control" id="productTags" required></input>
           </div>
           <!-- <div class="col-12">
             <div class="form-check">
@@ -218,7 +233,7 @@ if (isset($_SESSION["user"])) {
             }
             $imagesString = implode(",", $images_paths);
             $util = new Util();
-            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"], $imagesString, $_POST["productDesc"]);
+            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"], $imagesString, $_POST["productDesc"], $_POST["productTags"]);
             if ($result) {
               echo "<div class='p-3 rounded-lg text-success bg-light notification'>product added successfully</div>";
             } else {
