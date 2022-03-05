@@ -144,34 +144,63 @@ function pagination(offset) {
         }
     });
 }
-$(".page-item:eq(1)").addClass("active")
-pagination(0)
-var currentPage = 0
-var totalPages = $(".page-item").length - 2
-$(".page-item").click(function (e) {
-    e.preventDefault();
-    if (!isNaN(parseInt($(this).attr("data")))) {
+
+
+
+
+var current = 1
+var total = parseInt($(".page-item").length) - 2
+pagination(current - 1)
+$(`.page-item:eq(${current})`).addClass("active")
+$(".prev").hide()
+$(".page-item").click(function () {
+    var n = $(this).text()
+    if (!isNaN(parseInt(n))) {
+        $(".next").show()
+        $(".prev").show()
         $(".page-item").removeClass("active")
         $(this).addClass("active")
-        currentPage = parseInt($(this).attr("data"))
-        pagination($(this).attr("data") * 5)
-    }
-    else {
-        if (totalPages == currentPage + 2) {
+        current = parseInt($(this).text())
+        if (current == total) {
             $(".next").hide()
         }
-        // alert(currentPage)
-        if ($(this).text() == "Next") {
-            $(".page-item").removeClass("active")
-            currentPage++
-            pagination(currentPage * 5)
-            $(`.page-item:eq(${currentPage + 1})`).addClass("active")
+        if (current == 1) {
+            $(".prev").hide()
+        }
+        pagination((current - 1) * 5)
+    }
+    else {
+        if (n == "Next") {
+            if (current < total - 1) {
+                $(".prev").show()
+                current++
+                $(".page-item").removeClass("active")
+                $(`.page-item:eq(${current})`).addClass("active")
+                pagination((current - 1) * 5)
+            }
+            else {
+                current++
+                pagination((current - 1) * 5)
+                $(".next").hide()
+                $(".page-item").removeClass("active")
+                $(`.page-item:eq(${current})`).addClass("active")
+            }
         }
         else {
-            $(".page-item").removeClass("active")
-            currentPage--
-            pagination(currentPage * 5)
-            $(`.page-item:eq(${currentPage - 1})`).addClass("active")
+            if (current > 2) {
+                $(".next").show()
+                current--
+                pagination((current - 1) * 5)
+                $(".page-item").removeClass("active")
+                $(`.page-item:eq(${current})`).addClass("active")
+            }
+            else {
+                current--
+                pagination((current - 1) * 5)
+                $(".prev").hide()
+                $(".page-item").removeClass("active")
+                $(`.page-item:eq(${current})`).addClass("active")
+            }
         }
     }
-});
+})
