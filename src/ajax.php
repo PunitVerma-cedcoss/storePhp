@@ -30,7 +30,11 @@ if (isset($_POST["action"])) {
             echo "error";
         }
     } else if ($_POST["action"] == "pagination") {
-        print_r(json_encode($util->pagination($_POST["offset"])));
+        if (isset($_POST["orderby"])) {
+            print_r(json_encode($util->pagination($_POST["offset"], $_POST["orderby"])));
+        } else {
+            print_r(json_encode($util->pagination($_POST["offset"])));
+        }
     } else if ($_POST["action"] == "getTotalPages") {
         print_r(ceil($util->countPages()[0]["count"] / 5));
     } else if ($_POST["action"] == "deleteProduct") {
@@ -39,5 +43,31 @@ if (isset($_POST["action"])) {
         } else {
             echo "error";
         }
+    } else if ($_POST["action"] == "search") {
+        print_r(json_encode($util->searchProduct($_POST["query"])));
+    } else if ($_POST["action"] == "addToCart") {
+        print_r(json_encode($util->addToCart($_POST["id"])));
+    } else if ($_POST["action"] == "getCart") {
+        print_r(json_encode($util->getCart()));
+    } else if ($_POST["action"] == "updateCart") {
+        echo $util->updateCart($_POST["productId"], $_POST["quantity"]);
+    } else if ($_POST["action"] == "deleteCart") {
+        echo $util->deleteCart($_POST["productId"]);
+    } else if ($_POST["action"] == "applyPromo") {
+        print_r(json_encode($util->applyPromo($_POST["promoCode"])));
+        // if ($util->applyPromo($_POST["promoCode"])) {
+        //     return "success";
+        // } else {
+        //     "error";
+        // }
+    } else if ($_POST["action"] == "checkout") {
+        if ($util->checkout($_POST))
+            echo "success";
+        else {
+            echo "error";
+        }
     }
-}
+} 
+// else {
+//     print_r($_POST);
+// }

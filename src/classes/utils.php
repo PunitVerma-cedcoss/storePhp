@@ -171,11 +171,11 @@ class Util extends DB
             return "error";
         }
     }
-    public function pagination($offset)
+    public function pagination($offset, $orderby = "id")
     {
         try {
             $conn = DB::getInstance();
-            $query = 'SELECT * from Products  ORDER BY id LIMIT ' . 5 . ' OFFSET ' . $offset;
+            $query = 'SELECT * from Products  ORDER BY ' . $orderby . ' LIMIT ' . 5 . ' OFFSET ' . $offset;
             $stmt = $conn->prepare($query);
             $stmt->execute();
             // set the resulting array to associative
@@ -255,5 +255,192 @@ class Util extends DB
             echo $e;
             return false;
         }
+    }
+    public function searchProduct($query)
+    {
+        try {
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare('SELECT * FROM `Products` WHERE (product_name LIKE "' . $query . '%") OR (product_category LIKE "' . $query . '%") OR (id LIKE "' . $query . '%")');
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function addToCart($id)
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * FROM cart where user_id = '$user' AND product_id = '$id'");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+            $res = $stmt->fetchAll();
+            if (count($res) == 1) {
+                // if product is already preent in cart just increase it's quantity
+                try {
+                    DB::getInstance()->exec("UPDATE cart SET product_quantity = (SELECT product_quantity WHERE user_id = '$user')+1 WHERE user_id = '$user'");
+                    return true;
+                } catch (PDOException $e) {
+                    echo $e;
+                    return false;
+                }
+            } else {
+                // add it to the cart
+                try {
+                    DB::getInstance()->exec("INSERT INTO `cart` (`id`, `product_id`, `user_id`, `product_quantity`) VALUES (NULL, '$id', '$user', 1);");
+                    return true;
+                } catch (PDOException $e) {
+                    echo $e;
+                    return false;
+                }
+            }
+            // DB::getInstance()->exec("");
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
+        }
+    }
+    public function getCart()
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT cart.product_id,cart.id,cart.product_quantity,Products.product_price,Products.product_name FROM `cart` INNER JOIN Products ON cart.product_id = Products.id WHERE cart.user_id = '$user'");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function updateCart($id, $quantity)
+    {
+        try {
+            $user = $_SESSION["user"];
+            DB::getInstance()->exec("UPDATE cart SET product_quantity='$quantity' WHERE user_id='$user' AND id='$id'");
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
+        }
+    }
+    public function deleteCart($id)
+    {
+        try {
+            $user = $_SESSION["user"];
+            DB::getInstance()->exec("DELETE FROM cart WHERE user_id='$user' AND id='$id'");
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
+        }
+    }
+    public function applyPromo($promoCode)
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * FROM redeem WHERE promo_code = '$promoCode'");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            if (count($res) == 1) {
+                if ($res[0]["used"] == 0) {
+                    if (date($res[0]["exp_date"]) > date("Y-m-d H:i:s")) {
+                        // promo coade is valid 
+                        try {
+                            $user = $_SESSION["user"];
+                            DB::getInstance()->exec("UPDATE `redeem` SET `used` = '$promoCode' WHERE `redeem`.`id` = 1;");
+                            return true;
+                        } catch (PDOException $e) {
+                            echo $e;
+                            return false;
+                        }
+
+                        return array("good");
+                    } else {
+                        return array("expired");
+                    }
+                } else {
+                    return array("promo is used");
+                }
+                return $res[0];
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+
+    public function checkout($data)
+    {
+        $tmp = [];
+        foreach ($this->getCart() as $product) {
+            array_push($tmp, $product["product_id"] . ":" . $product["product_quantity"]);
+        }
+        $p = implode(",", $tmp);
+        try {
+            $user = $_SESSION["user"];
+            $promoCode = (int) $data["promoCode"];
+            $adress = $data["adress"];
+            $adress2 = $data["adress2"];
+            $country = $data["country"];
+            $state = $data["state"];
+            $zip = $data["zip"];
+            $nameOnCard = $data["nameOnCard"];
+            $cardExp = $data["cardExp"];
+            $cvv = $data["cvv"];
+            $fname = $data["fname"];
+            $lname = $data["lname"];
+            $billingAdressSame = $data["billingAdressSame"];
+            if (isset($data["save"])) {
+                $save = $data["save"];
+            } else {
+                $save = "off";
+            }
+            $cardNumber = $data["cardNumber"];
+            $paymentMethod = $data["paymentMethod"];
+            $date = (string) Date('Y-m-d H:i:s');
+            DB::getInstance()->exec("INSERT INTO `Orders` (`id`, `user_id`, `fname`, `lname`, `promo_id`, `order_date`, `address`, `address2`, `country`, `State`, `zip`, `billing_adress`, `payment_mode`, `name_on_card`, `card_no`, `expiration`, `cvv`, `products`) VALUES (NULL, '$user','$fname','$lname', '1','$date', '$adress', '$adress2', '$country', '$state', '$zip', '$billingAdressSame', '$paymentMethod', '$nameOnCard', '$cardNumber', '$cardExp', '$cvv','$p')");
+
+            try {
+                if ($save == "on") {
+                    try {
+                        $user = $_SESSION["user"];
+                        DB::getInstance()->exec("INSERT INTO `userDetails` (`id`, `fname`, `lname`, `adress`, `country`, `state`, `zip`, `payment_method`, `name_on_card`, `card_no`, `card_exp`, `card_cvv`) VALUES (NULL, '$fname', '$lname', '$adress', '$country', '$state', '$zip', '$paymentMethod', '$nameOnCard', '$cardNumber', '$cardExp', '$cvv');");
+                    } catch (PDOException $e) {
+                        echo $e;
+                    }
+                }
+            } catch (Exception $e) {
+            }
+
+            try {
+                $user = $_SESSION["user"];
+                DB::getInstance()->exec("DELETE FROM cart WHERE user_id = '$user'");
+            } catch (PDOException $e) {
+                echo $e;
+            }
+
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
+        }
+        return $data;
     }
 }
