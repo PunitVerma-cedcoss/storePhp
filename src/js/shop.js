@@ -49,7 +49,7 @@ function Sortpagination(offset, orderby = "id") {
                 <div class="card shadow-sm">
                     <img src="${i.product_images.split(",").length <= 1 ? "https://source.unsplash.com/200x200/?product" : "../" + i.product_images.split(",")[0]}" alt="" class="img-fluid" style="height:300px;width:100%;">
                   <div class="card-body">
-                    <h5>${i.product_name}</h5>
+                    <h5><a href="single-product.php?id=${i.id}" class="text-decoration-none text-dark">${i.product_name}</a></h5>
                     <p class="card-text">Sample text below</p>
                     <div class="d-flex justify-content-between align-items-center">
                       <p><strong><i class="fa fa-inr"></i> ${i.product_price}</strong>&nbsp;<del><small class="link-danger">$180</small></del></p>
@@ -177,7 +177,7 @@ function search(text) {
                 <div class="card shadow-sm">
                     <img src="${i.product_images.split(",").length <= 1 ? "https://source.unsplash.com/200x200/?product" : "../" + i.product_images.split(",")[0]}" alt="" class="img-fluid" style="height:300px;width:100%;">
                   <div class="card-body">
-                    <h5>${i.product_name}</h5>
+                  <h5><a href="single-product.php?id=${i.id}" class="text-decoration-none text-dark">${i.product_name}</a></h5>
                     <p class="card-text">Sample text below</p>
                     <div class="d-flex justify-content-between align-items-center">
                       <p><strong><i class="fa fa-inr"></i> ${i.product_price}</strong>&nbsp;<del><small class="link-danger">$180</small></del></p>
@@ -202,11 +202,11 @@ function search(text) {
 $("body").on("click", ".addToCart", function () {
     var x = $(this).text()
     if (x != "added")
-        addToCart($(this).attr("data-product_id"), $(this))
+        addToCart($(this).parent().prev().prev().text(),$(this).attr("data-product_id"), $(this))
 });
 
 
-function addToCart(id, ref) {
+function addToCart(name,id, ref) {
     $.ajax({
         type: "post",
         url: "../../ajax.php",
@@ -214,6 +214,8 @@ function addToCart(id, ref) {
         success: function (response) {
             if (response == "true") {
                 showAdded(ref)
+                $(".empty").remove()
+                $(".showCart").append(`<p>${name}</p>`)
             }
         }
     });
@@ -226,3 +228,28 @@ function showAdded(ref) {
     }, 2000);
 
 }
+
+function loadCart() {
+    $.ajax({
+        type: "post",
+        url: "../../ajax.php",
+        data: { "action": "getCart" },
+        success: function (response) {
+            var data = JSON.parse(response)
+            if (data.length) {
+                var markup = ``
+                data.forEach(i => {
+                    markup += `
+                <p class="m-0 p-0 text-white">${i.product_name} x${i.product_quantity}</p>
+                `
+                });
+                $(".showCart").html(markup)
+            }
+            else {
+                $(".showCart").html(`<p class="m-0 p-0 text-white">nothing here</p>`)
+            }
+        }
+    });
+}
+
+loadCart()

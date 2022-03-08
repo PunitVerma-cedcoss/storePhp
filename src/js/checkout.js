@@ -27,6 +27,7 @@ function loadCart() {
                 // $(".cartTotal").text("$" + totalCart + "-/")
             }
             else {
+                window.location.href = "home.php"
                 $(".renderCart").html(`
                 <h1>Go to shopping u Fool</h1>
                 `)
@@ -85,7 +86,7 @@ $("#checkout").click(function (e) {
             console.log(response)
             if (response == "success") {
                 $(".ordered").show()
-                $(".checkoutForm").reset()
+                // $(".checkoutForm").reset()
             }
         }
     });

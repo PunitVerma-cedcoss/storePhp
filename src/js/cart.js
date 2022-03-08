@@ -31,7 +31,7 @@ function loadCart() {
             }
             else {
                 $(".renderCart").html(`
-                <h1>Go to shopping u Fool</h1>
+                <h1 class="text-center">Go to shopping u Fool</h1>
                 `)
             }
         }

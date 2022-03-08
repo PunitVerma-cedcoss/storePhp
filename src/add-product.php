@@ -1,5 +1,7 @@
 <?php
-include "classes/utils.php";
+use App\Util;
+
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 if (isset($_SESSION["user"])) {
     if ($_SESSION["user"] != "admin@store.com") {
@@ -156,8 +158,6 @@ if (isset($_SESSION["user"])) {
               <select id="inputState" name="productCategory" class="form-select categories" required>
                 <option selected>choose</option>
                 <?php
-                include "../src/vendor/autoload.php";
-                use App\Util;
 
                 $util1 = new Util();
                 foreach ($util1->getCategories() as $product) {

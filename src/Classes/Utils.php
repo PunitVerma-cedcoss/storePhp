@@ -2,10 +2,6 @@
 
 namespace App;
 
-require "DB.php";
-
-use DB;
-
 use PDO;
 
 use PDOException;
@@ -287,7 +283,7 @@ class Util extends DB
             return "error";
         }
     }
-    public function addToCart($id)
+    public function addToCart($id, $quantity = 1)
     {
         try {
             $user = $_SESSION["user"];
@@ -301,7 +297,11 @@ class Util extends DB
             if (count($res) == 1) {
                 // if product is already preent in cart just increase it's quantity
                 try {
-                    DB::getInstance()->exec("UPDATE cart SET product_quantity = (SELECT product_quantity WHERE user_id = '$user')+1 WHERE user_id = '$user'");
+                    if (is_numeric($quantity)) {
+                        DB::getInstance()->exec("UPDATE cart SET product_quantity = (SELECT product_quantity WHERE user_id = '$user')+ $quantity WHERE user_id = '$user'");
+                    } else {
+                        DB::getInstance()->exec("UPDATE cart SET product_quantity = (SELECT product_quantity WHERE user_id = '$user')+1 WHERE user_id = '$user'");
+                    }
                     return true;
                 } catch (PDOException $e) {
                     echo $e;
@@ -500,5 +500,37 @@ class Util extends DB
             }
         }
         return $tmp;
+    }
+    public function getRelatedProducts($category)
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * FROM Products WHERE product_category = '$category' LIMIT 4");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function getOrdersByName()
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * FROM Orders WHERE user_id = '$user'");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
     }
 }

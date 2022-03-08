@@ -2,10 +2,6 @@
 
 namespace App;
 
-require "DB.php";
-
-use DB;
-
 use PDOException;
 
 class User extends DB

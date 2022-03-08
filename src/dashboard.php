@@ -1,4 +1,7 @@
 <?php
+use App\Util;
+
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 ?>
 <!doctype html>
@@ -104,7 +107,15 @@ session_start();
                   Integrations
                 </a>
               </li>
-            <?php } ?>
+            <?php } else {?>
+
+                <li class="nav-item">
+                <a class="nav-link" href="Orders.php">
+                  <span data-feather="file"></span>
+                  My Orders
+                </a>
+              </li>
+                <?php }?>
           </ul>
         </div>
       </nav>
@@ -131,7 +142,6 @@ session_start();
           <h2>Recent Products</h2>
           <div class="table-responsive">
             <?php
-            include "classes/utils.php";
             $util = new Util();
             $result =  $util->getProducts();
             $keys = array_keys($result[0]);

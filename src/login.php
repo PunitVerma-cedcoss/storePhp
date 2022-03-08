@@ -1,5 +1,5 @@
 <?php
-require "classes/utils.php";
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 if (isset($_SESSION["user"])) {
     header("location:dashboard.php");
@@ -64,6 +64,10 @@ if (isset($_SESSION["user"])) {
       <button class="w-100 btn btn-lg btn-primary" name="submit" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; CEDCOSS Technologies</p>
       <?php
+        // include "../src/vendor/autoload.php";
+
+        use App\Util;
+
         if (isset($_POST["submit"])) {
             $util = new Util();
             $result =  $util->login($_POST["email"], $_POST["password"]);

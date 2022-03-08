@@ -1,4 +1,7 @@
 <?php
+use App\Util;
+
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 ?>
 <!doctype html>
@@ -58,56 +61,64 @@ session_start();
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="dashboard.php">
-                                <span data-feather="home"></span>
-                                Dashboard
-                            </a>
-                        </li>
-                        <?php if ($_SESSION["data"]["type"] == "admin") { ?>
-                            <li class="nav-item">
-                                <a class="nav-link active" href="Orders.php">
-                                    <span data-feather="file"></span>
-                                    Orders
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="products.php">
-                                    <span data-feather="shopping-cart"></span>
-                                    Products
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="add-product.php">
-                                    <span data-feather="shopping-cart"></span>
-                                    Add Products
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="users"></span>
-                                    Customers
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="bar-chart-2"></span>
-                                    Reports
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <span data-feather="layers"></span>
-                                    Integrations
-                                </a>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </nav>
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <div class="position-sticky pt-3">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="dashboard.php">
+                <span data-feather="home"></span>
+                Dashboard
+              </a>
+            </li>
+            <?php if ($_SESSION["data"]["type"] == "admin") { ?>
+              <li class="nav-item">
+                <a class="nav-link active" href="Orders.php">
+                  <span data-feather="file"></span>
+                  Orders
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="products.php">
+                  <span data-feather="shopping-cart"></span>
+                  Products
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="add-product.php">
+                  <span data-feather="shopping-cart"></span>
+                  Add Products
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="users"></span>
+                  Customers
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="bar-chart-2"></span>
+                  Reports
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">
+                  <span data-feather="layers"></span>
+                  Integrations
+                </a>
+              </li>
+            <?php } else {?>
+
+                <li class="nav-item">
+                <a class="nav-link active" href="Orders.php">
+                  <span data-feather="file"></span>
+                  My Orders
+                </a>
+              </li>
+                <?php }?>
+          </ul>
+        </div>
+      </nav>
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
@@ -129,7 +140,6 @@ session_start();
                     <?php
                     $ctr = 0;
                     if ($_SESSION["data"]["type"] == "admin") {
-                        include "classes/utils.php";
                         $util = new Util();
                         foreach ($util->getOrders() as $order) {
                             ?>
@@ -188,10 +198,59 @@ session_start();
                 </div>
                         <?php
                     } else {
-                        ?>
-                <h1>not for admin</h1>
+                        $util = new Util();
+                        foreach ($util->getOrdersByName() as $order) {
+                            ?>
+                                                        <p class="fs-5"><?php echo $order["fname"]; ?>'s order</p>
+                            <div class="details bg-primary text-white border p-2 m-2 shadow-sm rounded" style="max-width: 50%;">
+                                <p class="ms-0 p-0 m-0">date of Order : <?php echo $order["order_date"]; ?></p>
+                                <p class="ms-0 p-0 m-0">address : <?php echo $order["address"]; ?></p>
+                                <p class="ms-0 p-0 m-0">address 2 : <?php echo $order["address2"]; ?></p>
+                                <p class="ms-0 p-0 m-0">country : <?php echo $order["country"]; ?></p>
+                                <p class="ms-0 p-0 m-0">state : <?php echo $order["State"]; ?></p>
+                                <p class="ms-0 p-0 m-0">zip : <?php echo $order["zip"]; ?></p>
+                                <p class="ms-0 p-0 m-0">payment Method : <?php echo $order["payment_mode"]; ?></p>
+                                <p class="ms-0 p-0 m-0">name on Card : <?php echo $order["name_on_card"]; ?></p>
+                                <p class="ms-0 p-0 m-0">card No : <?php echo $order["card_no"]; ?></p>
+                                <p class="ms-0 p-0 m-0">expiration : <?php echo $order["expiration"]; ?></p>
+                                <p class="ms-0 p-0 m-0">cvv : <?php echo $order["cvv"]; ?></p>
+                            </div>
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Product Name</th>
+                                        <th>Product Price</th>
+                                        <th>Product Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                        <?php
+
+                                    <?php
+                                    $total = 0;
+                                    foreach ($util->getProductDetails($order["products"]) as $cartDetails) {
+                                        $total += (int) $cartDetails["quantity"] * $cartDetails["product_price"];
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $cartDetails["id"]; ?></td>
+                                            <td><?php echo $cartDetails["product_name"]; ?></td>
+                                            <td><?php echo $cartDetails["product_price"]; ?></td>
+                                            <td><?php echo $cartDetails["quantity"]; ?></td>
+                                            <td><?php echo $cartDetails["quantity"] * $cartDetails["product_price"]; ?></td>
+                                        </tr>
+                                        <?php
+                                    }
+                                    ?>
+                                    <tr>
+                                        <td colspan="4" class="text-success">Grand Total</td>
+                                        <td colspan="1" class="fs-5 font-weight-bold text-primary"><?php echo $total; ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <?php
+                        }
                     }
                     ?>
 

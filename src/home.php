@@ -49,8 +49,10 @@ if (!isset($_SESSION["user"])) {
       <div class="container">
         <div class="row">
           <div class="col-sm-8 col-md-7 py-4">
-            <h4 class="text-white">Cart</h4>
-            <p class="text-muted">Cart is empty now.</p>
+            <h4 class="text-white"><a href="cart.php" class="text-decoration-none text-white">Cart</a></h4>
+            <div class="showCart text-white" style="max-height:100px;overflow:auto;">
+              <p class="text-muted empty">Cart is empty now.</p>
+            </div>
           </div>
           <div class="col-sm-4 offset-md-1 py-4">
             <h4 class="text-white">Contact</h4>
@@ -87,14 +89,14 @@ if (!isset($_SESSION["user"])) {
           <h1 class="fw-light">My Shop</h1>
           <p class="lead text-muted">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
           <p>
-            <a href="#" class="btn btn-primary my-2">Shop Now</a>
+            <a href="#shopNow" class="btn btn-primary my-2">Shop Now</a>
             <a href="#" class="btn btn-secondary my-2">Subscribe</a>
           </p>
         </div>
       </div>
     </section>
 
-    <div class="album py-5 bg-light">
+    <div class="album py-5 bg-light" id="shopNow">
       <div class="container overflow-hidden">
         <form class="row row-cols-lg-auto align-items-center mt-0 mb-3">
           <div class="col-lg-6 col-12">

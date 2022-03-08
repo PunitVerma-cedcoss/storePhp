@@ -1,5 +1,7 @@
 <?php
-include "classes/utils.php";
+use App\Util;
+
+require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 if (isset($_SESSION["user"])) {
     if ($_SESSION["user"] != "admin@store.com") {
