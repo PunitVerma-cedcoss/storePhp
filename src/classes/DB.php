@@ -1,4 +1,11 @@
 <?php
+
+namespace App;
+
+use PDO;
+
+use PDOException;
+
 // include "config.php";
 define("DBHOST", "mysql-server");
 define("DBUSER", "root");

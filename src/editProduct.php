@@ -189,7 +189,6 @@ if (!$data) {
                                     if ($data["product_category"] == $product["category"]) {
                                         echo '<option value="' . $product["category"] . '" selected>' . $product["category"] . '</option>';
                                     } else {
-
                                         echo '<option value="' . $product["category"] . '">' . $product["category"] . '</option>';
                                     }
                                 }
@@ -234,11 +233,11 @@ if (!$data) {
                     }
                     // if click add product
                     if (isset($_POST["submit"])) {
-
                         $ctr = 0;
                         for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
-                            if (is_image($_FILES["images"]["tmp_name"][$i]))
+                            if (is_image($_FILES["images"]["tmp_name"][$i])) {
                                 $ctr++;
+                            }
                         }
                         if ($ctr == count($_FILES["images"]["name"])) {
                             //all images are validated

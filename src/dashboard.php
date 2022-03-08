@@ -69,7 +69,7 @@ session_start();
             </li>
             <?php if ($_SESSION["data"]["type"] == "admin") { ?>
               <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="Orders.php">
                   <span data-feather="file"></span>
                   Orders
                 </a>
@@ -127,9 +127,7 @@ session_start();
         </div>
         <?php
         if ($_SESSION["type"] == "admin") {
-
-
-        ?>
+            ?>
           <h2>Recent Products</h2>
           <div class="table-responsive">
             <?php
@@ -143,27 +141,27 @@ session_start();
                 <tr>
           ";
             foreach ($keys as $k) {
-              $markup .= "<th scope='col'>" . $k . "</th>";
+                $markup .= "<th scope='col'>" . $k . "</th>";
             }
             $markup .= "</tr>
                 <tbody>
           ";
             foreach ($result as $product) {
-              $ctr = 0;
-              $markup .= "<tr>";
-              foreach ($product as $details) {
-                if ($ctr < 7) {
-                  $markup .= "<td>" . $details . "</td>";
-                } else {
-                  $markup .= "<td>";
-                  for ($i = 0; $i < (int) $details; $i++) {
-                    $markup .= "<i class='fa fa-star'></i>";
-                  }
-                  $markup .= "</td>";
+                $ctr = 0;
+                $markup .= "<tr>";
+                foreach ($product as $details) {
+                    if ($ctr < 7) {
+                        $markup .= "<td>" . $details . "</td>";
+                    } else {
+                        $markup .= "<td>";
+                        for ($i = 0; $i < (int) $details; $i++) {
+                            $markup .= "<i class='fa fa-star'></i>";
+                        }
+                        $markup .= "</td>";
+                    }
+                    $ctr++;
                 }
-                $ctr++;
-              }
-              $markup .= "</tr>";
+                $markup .= "</tr>";
             }
             $markup .= "</tbody>
             </table>    
@@ -183,7 +181,7 @@ session_start();
                 <tr>
           ";
             foreach ($keys as $k) {
-              $markup .= "<th scope='col'>" . $k . "</th>";
+                $markup .= "<th scope='col'>" . $k . "</th>";
             }
             $markup .= "<th scope='col'>Delete</th>";
             $markup .= "</tr>
@@ -192,38 +190,38 @@ session_start();
 
             $id = 0;
             foreach ($result as $product) {
-              $ctr = 0;
-              $markup .= "<tr>";
-              if ($product["email"] != "admin@store.com") {
-                foreach ($product as $details) {
-                  if ($ctr == 0) {
-                    $markup .= "<td>" . $id . "</td>";
-                  } else if ($ctr == 2) {
-                    $markup .= "<td data='" . $details . "'>" . $details . "</td>";
-                  } else if ($ctr < 5) {
-                    $markup .= "<td>" . $details . "</td>";
-                  } else {
-                    if ($details == 1) {
-                      $markup .= "<td><button class='status btn btn-danger'>Disapprove</button></td>";
-                    } else {
-                      $markup .= "<td><button class='status btn btn-success'>approve</button></td>";
+                $ctr = 0;
+                $markup .= "<tr>";
+                if ($product["email"] != "admin@store.com") {
+                    foreach ($product as $details) {
+                        if ($ctr == 0) {
+                            $markup .= "<td>" . $id . "</td>";
+                        } elseif ($ctr == 2) {
+                            $markup .= "<td data='" . $details . "'>" . $details . "</td>";
+                        } elseif ($ctr < 5) {
+                            $markup .= "<td>" . $details . "</td>";
+                        } else {
+                            if ($details == 1) {
+                                $markup .= "<td><button class='status btn btn-danger'>Disapprove</button></td>";
+                            } else {
+                                $markup .= "<td><button class='status btn btn-success'>approve</button></td>";
+                            }
+                            $markup .= "<td><button class='btn delete btn-danger btn-sm'>delete</button></td>";
+                        }
+                        $ctr++;
                     }
-                    $markup .= "<td><button class='btn delete btn-danger btn-sm'>delete</button></td>";
-                  }
-                  $ctr++;
                 }
-              }
-              $id++;
-              $markup .= "</tr>";
+                $id++;
+                $markup .= "</tr>";
             }
             $markup .= "</tbody>
             </table>    
           ";
             echo $markup;
             ?>
-          <?php
+            <?php
         } else {
-          ?>
+            ?>
 
             <!-- show profile if user is not admin -->
 
@@ -254,25 +252,29 @@ session_start();
             </div>
           </div> -->
               <div class="col-12">
-                <button type="submit" id="updateProfile" name="updateProfile" class="btn btn-primary">Update Profile</button>
+                <button type="submit" id="updateProfile" name="updateProfile" class="btn btn-primary">Update
+                  Profile</button>
                 <div class="profileMsg"></div>
               </div>
               <!-- handling update profile button -->
               <?php
-              if (isset($_POST["updateProfile"])) {
-                print_r($_POST);
-              }
-              ?>
+                if (isset($_POST["updateProfile"])) {
+                    print_r($_POST);
+                }
+                ?>
             </form>
 
-          <?php } ?>
+            <?php
+        }
+        ?>
           </div>
       </main>
     </div>
   </div>
 
 
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+  </script>
 </body>
 
 </html>

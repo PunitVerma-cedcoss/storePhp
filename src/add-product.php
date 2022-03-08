@@ -2,9 +2,9 @@
 include "classes/utils.php";
 session_start();
 if (isset($_SESSION["user"])) {
-  if ($_SESSION["user"] != "admin@store.com") {
-    header("location:dashboard.php");
-  }
+    if ($_SESSION["user"] != "admin@store.com") {
+        header("location:dashboard.php");
+    }
 }
 ?>
 <!doctype html>
@@ -156,16 +156,16 @@ if (isset($_SESSION["user"])) {
               <select id="inputState" name="productCategory" class="form-select categories" required>
                 <option selected>choose</option>
                 <?php
+                include "../src/vendor/autoload.php";
+                use App\Util;
+
                 $util1 = new Util();
                 foreach ($util1->getCategories() as $product) {
-                  if ($product["category"] != "Array")
-                    echo '<option value="' . $product["category"] . '">' . $product["category"] . '</option>';
+                    if ($product["category"] != "Array") {
+                        echo '<option value="' . $product["category"] . '">' . $product["category"] . '</option>';
+                    }
                 }
                 ?>
-                <!-- <option value="electronics">electronics</option>
-                <option value="fashion">fashion</option>
-                <option value="food">food</option>
-                <option value="sports">sports</option> -->
               </select>
               <a href="#" class="btn btn-primary ms-2 px-3 addCategory">+</a>
             </div>
@@ -188,59 +188,51 @@ if (isset($_SESSION["user"])) {
             <label for="productTags" class="form-label">Product Tags</label>
             <input text="text" name="productTags" rows="3" class="form-control" id="productTags" required></input>
           </div>
-          <!-- <div class="col-12">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="gridCheck">
-              <label class="form-check-label" for="gridCheck">
-                Check me out
-              </label>
-            </div>
-          </div> -->
           <div class="col-12">
             <button type="submit" name="submit" class="btn btn-primary">Add Product</button>
           </div>
           <div class="notification"></div>
           <?php
-          $images_paths = [];
-          function is_image($path)
-          {
-            $a = getimagesize($path);
-            $image_type = $a[2];
+            $images_paths = [];
+            function is_image($path)
+            {
+                $a = getimagesize($path);
+                $image_type = $a[2];
 
-            if (in_array($image_type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP))) {
-              return true;
-            }
-            return false;
-          }
-          // if click add product
-          if (isset($_POST["submit"])) {
-
-            $ctr = 0;
-            for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
-              if (is_image($_FILES["images"]["tmp_name"][$i]))
-                $ctr++;
-            }
-            if ($ctr == count($_FILES["images"]["name"])) {
-              //all images are validated
-              for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
-                $target_dir = "images/";
-                $image_format = explode(".", basename($_FILES["images"]["name"][$i]))[1];
-                $target_file = $target_dir . random_int(0, 10000000000000000) . "." . $image_format;
-                if (move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_file)) {
-                  array_push($images_paths, $target_file);
+                if (in_array($image_type, array(IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_BMP))) {
+                    return true;
                 }
-              }
+                return false;
             }
-            $imagesString = implode(",", $images_paths);
-            $util = new Util();
-            $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"], $imagesString, $_POST["productDesc"], $_POST["productTags"]);
-            if ($result) {
-              echo "<div class='p-3 rounded-lg text-success bg-light notification'>product added successfully</div>";
-            } else {
-              echo "<div class='p-3 rounded-lg text-danger bg-light notification'>error adding product</div>";
+            // if click add product
+            if (isset($_POST["submit"])) {
+                $ctr = 0;
+                for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
+                    if (is_image($_FILES["images"]["tmp_name"][$i])) {
+                        $ctr++;
+                    }
+                }
+                if ($ctr == count($_FILES["images"]["name"])) {
+                //all images are validated
+                    for ($i = 0; $i < count($_FILES["images"]["name"]); $i++) {
+                        $target_dir = "images/";
+                        $image_format = explode(".", basename($_FILES["images"]["name"][$i]))[1];
+                        $target_file = $target_dir . random_int(0, 10000000000000000) . "." . $image_format;
+                        if (move_uploaded_file($_FILES["images"]["tmp_name"][$i], $target_file)) {
+                            array_push($images_paths, $target_file);
+                        }
+                    }
+                }
+                $imagesString = implode(",", $images_paths);
+                $util = new Util();
+                $result =  $util->addProduct($_POST["productName"], $_POST["productPrice"], $_POST["productQuantity"], $_POST["productCategory"], $_POST["productRating"], $imagesString, $_POST["productDesc"], $_POST["productTags"]);
+                if ($result) {
+                    echo "<div class='p-3 rounded-lg text-success bg-light notification'>product added successfully</div>";
+                } else {
+                    echo "<div class='p-3 rounded-lg text-danger bg-light notification'>error adding product</div>";
+                }
             }
-          }
-          ?>
+            ?>
         </form>
       </main>
     </div>

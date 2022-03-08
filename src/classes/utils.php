@@ -1,5 +1,17 @@
 <?php
+
+namespace App;
+
 require "DB.php";
+
+use DB;
+
+use PDO;
+
+use PDOException;
+
+use Exception;
+
 class Util extends DB
 {
     public function login($email, $password)
@@ -84,7 +96,7 @@ class Util extends DB
             $res = $stmt->fetchAll();
             print_r($res[0]);
             echo $email;
-            //   if status is approved 
+            //   if status is approved
             $sql = "UPDATE users SET approved = IF(approved=1, 0, 1) WHERE email = '$email';";
             try {
                 DB::getInstance()->exec($sql);
@@ -111,7 +123,9 @@ class Util extends DB
                 echo $e;
                 return false;
             }
-        } else "user is not admin";
+        } else {
+            "user is not admin";
+        }
     }
     public function updateProfile($data)
     {
@@ -244,7 +258,9 @@ class Util extends DB
                 echo $e;
                 return false;
             }
-        } else "user is not admin";
+        } else {
+            "user is not admin";
+        }
     }
     public function updateProduct($id, $product_name, $product_price, $product_quantity, $product_category, $product_images, $product_desc, $product_rating, $product_tags)
     {
@@ -359,7 +375,7 @@ class Util extends DB
             if (count($res) == 1) {
                 if ($res[0]["used"] == 0) {
                     if (date($res[0]["exp_date"]) > date("Y-m-d H:i:s")) {
-                        // promo coade is valid 
+                        // promo coade is valid
                         try {
                             $user = $_SESSION["user"];
                             DB::getInstance()->exec("UPDATE `redeem` SET `used` = '$promoCode' WHERE `redeem`.`id` = 1;");
@@ -442,5 +458,47 @@ class Util extends DB
             return false;
         }
         return $data;
+    }
+    public function getOrders()
+    {
+        try {
+            $user = $_SESSION["user"];
+            $conn = DB::getInstance();
+            $stmt = $conn->prepare("SELECT * FROM Orders");
+            $stmt->execute();
+            // set the resulting array to associative
+            $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $res = $stmt->fetchAll();
+            return $res;
+        } catch (PDOException $e) {
+            echo $e;
+            return "error";
+        }
+    }
+    public function getProductDetails($products)
+    {
+        $tmp = [];
+        foreach (explode(",", $products) as $detail) {
+            $productId = explode(":", $detail)[0];
+            $quantity = explode(":", $detail)[1];
+            // echo "product id is : " . $productId . "\n";
+            // echo "Quantity is : " . $quantity . "\n";
+            try {
+                $user = $_SESSION["user"];
+                $conn = DB::getInstance();
+                $stmt = $conn->prepare("SELECT id,product_name,product_price FROM Products WHERE id='$productId'");
+                $stmt->execute();
+                // set the resulting array to associative
+                $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+                $res = $stmt->fetchAll();
+                // return $res;
+                $res[0]["quantity"] =  $quantity;
+                array_push($tmp, $res[0]);
+            } catch (PDOException $e) {
+                echo $e;
+                // return "error";
+            }
+        }
+        return $tmp;
     }
 }

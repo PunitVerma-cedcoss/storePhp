@@ -2,10 +2,10 @@
 include "classes/utils.php";
 session_start();
 if (!isset($_SESSION["user"])) {
-  header("location:login.php");
+    header("location:login.php");
 }
 if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholeseller") {
-  header("location:dashboard.php");
+    header("location:dashboard.php");
 }
 ?>
 <!doctype html>
@@ -185,29 +185,29 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
           <div id="render"></div>
           <?php
 
-          $user = new Util();
-          $pages = ceil($user->countPages()[0]["count"] / 5);
+            $user = new Util();
+            $pages = ceil($user->countPages()[0]["count"] / 5);
 
-          $markup = '
+            $markup = '
           <nav aria-label="Page navigation example">
           <ul class="pagination">
           <li class="page-item prev"><a class="page-link" href="#">Previous</a></li>
           ';
 
-          for ($i = 1; $i < $pages + 1; $i++) {
-            $markup .= '
+            for ($i = 1; $i < $pages + 1; $i++) {
+                $markup .= '
           <li class="page-item" data="' . ($i - 1) . '"><a class="page-link" href="#">' . $i . '</a></li>
             ';
-          }
+            }
 
-          $markup .= '
+              $markup .= '
           <li class="page-item next"><a class="page-link" href="#">Next</a></li>
         </ul>
       </nav>
           ';
 
-          echo $markup;
-          ?>
+            echo $markup;
+            ?>
           <div class="msg"></div>
         </div>
       </main>

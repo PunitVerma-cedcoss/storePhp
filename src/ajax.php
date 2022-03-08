@@ -1,5 +1,8 @@
 <?php
-include "classes/utils.php";
+// include "classes/utils.php";
+include "../src/vendor/autoload.php";
+use App\Util;
+
 session_start();
 $util = new Util();
 if (isset($_POST["action"])) {
@@ -61,13 +64,10 @@ if (isset($_POST["action"])) {
         //     "error";
         // }
     } else if ($_POST["action"] == "checkout") {
-        if ($util->checkout($_POST))
+        if ($util->checkout($_POST)) {
             echo "success";
-        else {
+        } else {
             echo "error";
         }
     }
-} 
-// else {
-//     print_r($_POST);
-// }
+}

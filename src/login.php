@@ -2,7 +2,7 @@
 require "classes/utils.php";
 session_start();
 if (isset($_SESSION["user"])) {
-  header("location:dashboard.php");
+    header("location:dashboard.php");
 }
 ?>
 <!doctype html>
@@ -64,24 +64,24 @@ if (isset($_SESSION["user"])) {
       <button class="w-100 btn btn-lg btn-primary" name="submit" type="submit">Sign in</button>
       <p class="mt-5 mb-3 text-muted">&copy; CEDCOSS Technologies</p>
       <?php
-      if (isset($_POST["submit"])) {
-        $util = new Util();
-        $result =  $util->login($_POST["email"], $_POST["password"]);
-        switch ($result) {
-          case "notapproved":
-            echo "<div class='p-3 text-warning bg-light rounded'>Approval Pending</div>";
-            break;
-          case "incorrect":
-            echo "<div class='p-3 text-danger bg-light rounded'>email/password incorrect</div>";
-            break;
-          case "ok":
-            header("location:dashboard.php");
+        if (isset($_POST["submit"])) {
+            $util = new Util();
+            $result =  $util->login($_POST["email"], $_POST["password"]);
+            switch ($result) {
+                case "notapproved":
+                    echo "<div class='p-3 text-warning bg-light rounded'>Approval Pending</div>";
+                    break;
+                case "incorrect":
+                    echo "<div class='p-3 text-danger bg-light rounded'>email/password incorrect</div>";
+                    break;
+                case "ok":
+                    header("location:dashboard.php");
+            }
         }
-      }
-      ?>
+        ?>
       <?php
-      echo isset($_GET["approval"]) ?  "<div class='p-3 text-warning bg-light rounded'>approval pending</div>" : "";
-      ?>
+        echo isset($_GET["approval"]) ?  "<div class='p-3 text-warning bg-light rounded'>approval pending</div>" : "";
+        ?>
 
     </form>
   </main>

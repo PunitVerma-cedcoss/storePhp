@@ -62,20 +62,20 @@ session_start();
                 <div class="position-sticky pt-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="dashboard.html">
+                            <a class="nav-link" aria-current="page" href="dashboard.php">
                                 <span data-feather="home"></span>
                                 Dashboard
                             </a>
                         </li>
                         <?php if ($_SESSION["data"]["type"] == "admin") { ?>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">
+                                <a class="nav-link active" href="Orders.php">
                                     <span data-feather="file"></span>
                                     Orders
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="products.html">
+                                <a class="nav-link" href="products.php">
                                     <span data-feather="shopping-cart"></span>
                                     Products
                                 </a>
@@ -87,7 +87,7 @@ session_start();
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">
+                                <a class="nav-link" href="#">
                                     <span data-feather="users"></span>
                                     Customers
                                 </a>
@@ -111,7 +111,7 @@ session_start();
 
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
+                    <h1 class="h2">My Orders</h1>
                     <?php if ($_SESSION["data"]["type"] == "admin") { ?>
                         <div class="btn-toolbar mb-2 mb-md-0">
                             <div class="btn-group me-2">
@@ -125,108 +125,80 @@ session_start();
                         </div>
                     <?php } ?>
                 </div>
-                <?php
-                if ($_SESSION["type"] == "admin") {
-                    ?>
-                    <div class="table-responsive">
-                        <?php
+                <div class="table-responsive">
+                    <?php
+                    $ctr = 0;
+                    if ($_SESSION["data"]["type"] == "admin") {
                         include "classes/utils.php";
                         $util = new Util();
-                        $result =  $util->getUsers(false);
-                        $keys = array_keys($result[0]);
-                        $markup = "
-            <table  class='table table-striped table-sm'>
-              <thead>
-                <tr>
-          ";
-                        foreach ($keys as $k) {
-                            $markup .= "<th scope='col'>" . $k . "</th>";
-                        }
-                        $markup .= "<th scope='col'>Delete</th>";
-                        $markup .= "</tr>
-                <tbody>
-          ";
+                        foreach ($util->getOrders() as $order) {
+                            ?>
+                            <p class="fs-5"><?php echo $order["fname"]; ?>'s order</p>
+                            <div class="details bg-primary text-white border p-2 m-2 shadow-sm rounded" style="max-width: 50%;">
+                                <p class="ms-0 p-0 m-0">date of Order : <?php echo $order["order_date"]; ?></p>
+                                <p class="ms-0 p-0 m-0">address : <?php echo $order["address"]; ?></p>
+                                <p class="ms-0 p-0 m-0">address 2 : <?php echo $order["address2"]; ?></p>
+                                <p class="ms-0 p-0 m-0">country : <?php echo $order["country"]; ?></p>
+                                <p class="ms-0 p-0 m-0">state : <?php echo $order["State"]; ?></p>
+                                <p class="ms-0 p-0 m-0">zip : <?php echo $order["zip"]; ?></p>
+                                <p class="ms-0 p-0 m-0">payment Method : <?php echo $order["payment_mode"]; ?></p>
+                                <p class="ms-0 p-0 m-0">name on Card : <?php echo $order["name_on_card"]; ?></p>
+                                <p class="ms-0 p-0 m-0">card No : <?php echo $order["card_no"]; ?></p>
+                                <p class="ms-0 p-0 m-0">expiration : <?php echo $order["expiration"]; ?></p>
+                                <p class="ms-0 p-0 m-0">cvv : <?php echo $order["cvv"]; ?></p>
+                            </div>
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Product Name</th>
+                                        <th>Product Price</th>
+                                        <th>Product Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
-                        $id = 0;
-                        foreach ($result as $product) {
-                            $ctr = 0;
-                            $markup .= "<tr>";
-                            if ($product["email"] != "admin@store.com") {
-                                foreach ($product as $details) {
-                                    if ($ctr == 0) {
-                                        $markup .= "<td>" . $id . "</td>";
-                                    } else if ($ctr == 2) {
-                                        $markup .= "<td data='" . $details . "'>" . $details . "</td>";
-                                    } else if ($ctr < 5) {
-                                        $markup .= "<td>" . $details . "</td>";
-                                    } else {
-                                        if ($details == 1) {
-                                            $markup .= "<td><button class='status btn btn-danger'>Disapprove</button></td>";
-                                        } else {
-                                            $markup .= "<td><button class='status btn btn-success'>approve</button></td>";
-                                        }
-                                        $markup .= "<td><button class='btn delete btn-danger btn-sm'>delete</button></td>";
+
+                                    <?php
+                                    $total = 0;
+                                    foreach ($util->getProductDetails($order["products"]) as $cartDetails) {
+                                        $total += (int) $cartDetails["quantity"] * $cartDetails["product_price"];
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $cartDetails["id"]; ?></td>
+                                            <td><?php echo $cartDetails["product_name"]; ?></td>
+                                            <td><?php echo $cartDetails["product_price"]; ?></td>
+                                            <td><?php echo $cartDetails["quantity"]; ?></td>
+                                            <td><?php echo $cartDetails["quantity"] * $cartDetails["product_price"]; ?></td>
+                                        </tr>
+                                        <?php
                                     }
-                                    $ctr++;
-                                }
-                            }
-                            $id++;
-                            $markup .= "</tr>";
+                                    ?>
+                                    <tr>
+                                        <td colspan="4" class="text-success">Grand Total</td>
+                                        <td colspan="1" class="fs-5 font-weight-bold text-primary"><?php echo $total; ?></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <?php
                         }
-                        $markup .= "</tbody>
-            </table>    
-          ";
-                        echo $markup;
                         ?>
-                    <?php
-                } else {
+                </div>
+                        <?php
+                    } else {
+                        ?>
+                <h1>not for admin</h1>
+
+                        <?php
+                    }
                     ?>
 
-                        <!-- show profile if user is not admin -->
 
-                        <form class="row g-3 updateProfileForm" method="post">
-                            <div class="col-lg-2 col-md-4 d-flex justify-content-center align-items-center ">
-                                <div class="profilepic bg-primary rounded-circle d-flex justify-content-center align-items-center text-white font-weight-bold display-2" style="width: 100px;height:100px">
-                                    <p><?php echo $_SESSION["data"]["userName"][0] ?></p>
-                                </div>
-                            </div>
-                            <div class="col-lg-10 col-md-8">
-                                <label for="inputEmail4" class="form-label">User Name</label>
-                                <input type="text" name="userName" class="form-control" id="inputEmail4" value="<?php echo $_SESSION["data"]["userName"]; ?>" required>
-                            </div>
-                            <div class="col-md-12">
-                                <label for="inputPassword4" class="form-label">Email</label>
-                                <input type="text" name="email" class="form-control" id="inputPassword4" value="<?php echo $_SESSION["data"]["email"]; ?>" required>
-                            </div>
-                            <div class="col-12">
-                                <label for="inputAddress" class="form-label">Password</label>
-                                <input type="text" name="password" value="<?php echo $_SESSION["data"]["password"]; ?>" class="form-control" id="inputAddress" required>
-                            </div>
-                            <div class="col-12">
-                                <button 
-                                type="submit" 
-                                id="updateProfile" 
-                                name="updateProfile" 
-                                class="btn btn-primary"
-                                >
-                                Update Profile
-                            </button>
-                                <div class="profileMsg"></div>
-                            </div>
-                            <!-- handling update profile button -->
-                            <?php
-                            if (isset($_POST["updateProfile"])) {
-                                print_r($_POST);
-                            }
-                            ?>
-                        </form>
-
-                    <?php
-                }
-                ?>
-                    </div>
-            </main>
         </div>
+        </main>
+    </div>
     </div>
 
 
