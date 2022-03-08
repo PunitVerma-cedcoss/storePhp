@@ -53,6 +53,9 @@ $data = $util->getProductById($_GET["id"])[0];
                             <li><a href="#" class="text-white">Follow on Twitter</a></li>
                             <li><a href="#" class="text-white">Like on Facebook</a></li>
                             <li><a href="#" class="text-white">Email me</a></li>
+                            <li><a href="php/dashboard.php" class="text-white">DashBoard</a></li>
+                            <li><a class="nav-link px-3" href="php/logout.php">Sign out</a></li>
+
                         </ul>
                     </div>
                 </div>

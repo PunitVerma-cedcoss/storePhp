@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION["user"])) {
-    header("location:login.php");
+  header("location:login.php");
 }
 ?>
 <!doctype html>
@@ -60,6 +60,8 @@ if (!isset($_SESSION["user"])) {
               <li><a href="#" class="text-white">Follow on Twitter</a></li>
               <li><a href="#" class="text-white">Like on Facebook</a></li>
               <li><a href="#" class="text-white">Email me</a></li>
+              <li><a href="php/dashboard.php" class="text-white">DashBoard</a></li>
+              <li><a href="php/logout.php" class="text-white">Log out</a></li>
             </ul>
           </div>
         </div>

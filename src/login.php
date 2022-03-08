@@ -2,7 +2,11 @@
 require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
 if (isset($_SESSION["user"])) {
-    header("location:dashboard.php");
+    if ($_SESSION["data"]["type"] == "admin") {
+        header("location:dashboard.php");
+    } else {
+        header("location:home.php");
+    }
 }
 ?>
 <!doctype html>

@@ -22,6 +22,7 @@ session_start();
     <!-- Jquery CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" defer></script>
     <script src="js/main.js" defer></script>
+    <script src="js/Orders.js" defer></script>
 
     <style>
         .bd-placeholder-img {
@@ -115,7 +116,9 @@ session_start();
                   My Orders
                 </a>
               </li>
-                <?php }?>
+                <?php
+            }
+            ?>
           </ul>
         </div>
       </nav>
@@ -144,6 +147,8 @@ session_start();
                         foreach ($util->getOrders() as $order) {
                             ?>
                             <p class="fs-5"><?php echo $order["fname"]; ?>'s order</p>
+                            <button data-bs-toggle="collapse" class="btn btn-primary" data-bs-target="#demo<?php echo $order["id"]; ?>">show Details</button>
+                            <div id="demo<?php echo $order["id"]; ?>" class="collapse">
                             <div class="details bg-primary text-white border p-2 m-2 shadow-sm rounded" style="max-width: 50%;">
                                 <p class="ms-0 p-0 m-0">date of Order : <?php echo $order["order_date"]; ?></p>
                                 <p class="ms-0 p-0 m-0">address : <?php echo $order["address"]; ?></p>
@@ -157,6 +162,15 @@ session_start();
                                 <p class="ms-0 p-0 m-0">expiration : <?php echo $order["expiration"]; ?></p>
                                 <p class="ms-0 p-0 m-0">cvv : <?php echo $order["cvv"]; ?></p>
                             </div>
+                            </div>
+                            <label for="status">
+                            <select name="status" data="<?php echo $order["id"]; ?>" class="form-select m-2 changeStatus">
+                              <option value="none" class="">Change Status</option>
+                              <option value="pending" class="text-warning" <?php echo $order["status"]=="pending" ? "selected":"false" ?>>Progress</option>
+                              <option value="delivered" class="text-success" <?php echo $order["status"]=="delivered" ? "selected":"false" ?>>Delivered</option>
+                              <option value="shift" class="text-primary" <?php echo $order["status"]=="shift" ? "selected":"false" ?>>shift</option>
+                            </select>
+                            </label>
                             <table class="table table-striped table-sm">
                                 <thead>
                                     <tr>
@@ -260,8 +274,8 @@ session_start();
     </div>
     </div>
 
-
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="/src/node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script> -->
 </body>
 
 </html>

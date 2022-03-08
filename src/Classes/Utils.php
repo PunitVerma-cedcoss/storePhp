@@ -533,4 +533,15 @@ class Util extends DB
             return "error";
         }
     }
+    public function changeStatus($id, $status)
+    {
+        try {
+            $user = $_SESSION["user"];
+            DB::getInstance()->exec("UPDATE Orders SET status='$status' WHERE id='$id'");
+            return true;
+        } catch (PDOException $e) {
+            echo $e;
+            return false;
+        }
+    }
 }

@@ -22,6 +22,8 @@ session_start();
   <!-- Jquery CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" defer></script>
   <script src="js/main.js" defer></script>
+  <script src="js/csvOperations.js" defer></script>
+
 
   <style>
     .bd-placeholder-img {
@@ -107,7 +109,8 @@ session_start();
                   Integrations
                 </a>
               </li>
-            <?php } else {?>
+            <?php } else {
+                ?>
 
                 <li class="nav-item">
                 <a class="nav-link" href="Orders.php">
@@ -116,6 +119,12 @@ session_start();
                 </a>
               </li>
                 <?php }?>
+                <li class="nav-item">
+                <a class="nav-link" href="home.php">
+                  <span data-feather="file"></span>
+                  Shop
+                </a>
+              </li>
           </ul>
         </div>
       </nav>
@@ -127,7 +136,7 @@ session_start();
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group me-2">
                 <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary export">Export</button>
               </div>
               <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span>

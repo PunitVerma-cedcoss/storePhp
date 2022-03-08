@@ -74,5 +74,11 @@ if (isset($_POST["action"])) {
         } else {
             echo "error";
         }
+    } elseif ($_POST["action"] == "changeStatus") {
+        if ($util->changeStatus($_POST["id"], $_POST["status"])) {
+            echo "success";
+        } else {
+            echo "error";
+        }
     }
 }
