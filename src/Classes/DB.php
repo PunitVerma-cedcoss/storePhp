@@ -6,11 +6,7 @@ use PDO;
 
 use PDOException;
 
-// include "config.php";
-define("DBHOST", "mysql-server");
-define("DBUSER", "root");
-define("DBPASS", "secret");
-define("DBNAME", "Store");
+require $_SERVER["DOCUMENT_ROOT"] . "/config.php";
 class DB
 {
     public static $instance;

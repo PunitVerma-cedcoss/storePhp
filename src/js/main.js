@@ -230,3 +230,67 @@ $(".page-item").click(function () {
         }
     }
 })
+
+
+$(".searchBtn").click(function (e) {
+    var query = $(".searchInput").val()
+    e.preventDefault();
+    if (query != "") {
+        $.ajax({
+            type: "post",
+            url: "../ajax.php",
+            data: { "action": "search", "query": query },
+            success: function (response) {
+                console.log(response)
+                var data = JSON.parse(response)
+                var markup = `
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Product Name</th>
+                            <th>Product Price</th>
+                            <th>Product quantity</th>
+                            <th>Product uploader</th>
+                            <th>Product Category</th>
+                            <th>Product Desc</th>
+                            <th>Product rating</th>
+                            <th>Product images</th>
+                            <th>Edit/Delete</th>
+                        </tr>
+                    <tbody>
+                `
+                data.forEach(i => {
+                    markup += `
+                    <tr>
+                    <td>${i.id}</td>
+                    <td>${i.product_name}</td>
+                    <td>${i.product_price}</td>
+                    <td>${i.product_quantity}</td>
+                    <td>${i.product_category}</td>
+                    <td>${i.product_images.split(",").join("\n")}</td>
+                    <td>${i.product_desc.length > 50 ? i.product_desc.substr(0, 50) + "..." : i.product_desc}</td>
+                    <td>${i.product_rating}</td>
+                    <td>${i.product_uploader}</td>
+                    <td><a href="editProduct.php?productId=${i.id}">Edit</a> <a href="#" class="deleteProduct" data="${i.id}">Delete</a></td>
+                    </tr>
+                    `
+                    console.log(i)
+                });
+                markup += `
+                </tbody>
+                </table>
+                `
+                $("#render").html(markup)
+                $(".navigation").hide();
+                $(".searchInput").val("")
+            }
+        });
+    }
+    else {
+        $(".navigation").hide();
+        current = 1
+        total = parseInt($(".page-item").length) - 2
+        pagination(current - 1)
+    }
+});

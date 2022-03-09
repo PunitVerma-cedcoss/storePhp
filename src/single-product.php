@@ -43,7 +43,7 @@ $data = $util->getProductById($_GET["id"])[0];
             <div class="container">
                 <div class="row">
                     <div class="col-sm-8 col-md-7 py-4">
-                        <h4 class="text-white">Cart</h4>
+                        <h4 class="text-white"><a href="cart.php" class="text-white text-decoration-none">Cart</a></h4>
                         <div class="showCart" style="max-height:100px;overflow:auto;">
                         </div>
                     </div>

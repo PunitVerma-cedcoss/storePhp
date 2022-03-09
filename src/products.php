@@ -82,7 +82,7 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="Orders.php">
                 <span data-feather="file"></span>
                 Orders
               </a>
@@ -100,7 +100,7 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">
+              <a class="nav-link" href="customers.php">
                 <span data-feather="users"></span>
                 Customers
               </a>
@@ -157,27 +157,17 @@ if ($_SESSION["data"]["type"] != "admin" && $_SESSION["data"]["type"] != "wholes
       <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Products</h1>
-          <div class="btn-toolbar mb-2 mb-md-0">
-            <div class="btn-group me-2">
-              <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-              <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-            </div>
-            <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-              <span data-feather="calendar"></span>
-              This week
-            </button>
-          </div>
         </div>
 
         <form class="row row-cols-lg-auto g-3 align-items-center">
           <div class="col-12">
             <label class="visually-hidden" for="inlineFormInputGroupUsername">Search</label>
             <div class="input-group">
-              <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="Enter id,name...">
+              <input type="text" class="form-control searchInput" id="inlineFormInputGroupUsername" placeholder="Enter id,name...">
             </div>
           </div>
           <div class="col-12">
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="btn btn-primary searchBtn">Search</button>
           </div>
           <div class="col-12">
             <a class="btn btn-success" href="add-product.php">Add Product</a>

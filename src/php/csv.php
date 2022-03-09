@@ -13,16 +13,35 @@ switch ($_POST["action"]) {
     case "export":
         writeCsv();
         break;
+    case "csvToArray":
+        csvToArray($_POST["data"]);
+        break;
+    case "insert":
+        insert($_POST["data"]);
+        break;
     default:
         echo "inavlid ";
         break;
 }
 
-function readCsv($path)
+function readCsv($data)
 {
-    $file = fopen($path, "r");
-    print_r(fgetcsv($file));
-    fclose($file);
+    $csv = str_getcsv($data);
+    echo '<pre>';
+    print_r($csv);
+    echo '</pre>';
+}
+function csvToArray($data)
+{
+    $fp = fopen("php://temp", 'r+');
+    fputs($fp, $data);
+    rewind($fp);
+    $csv = [];
+    while (($data = fgetcsv($fp)) !== false) {
+        $csv[] = $data;
+    }
+    echo json_encode($csv);
+    fclose($fp);
 }
 function writeCsv()
 {
@@ -38,4 +57,32 @@ function writeCsv()
     }
     fclose($f);
     echo "csv/" . $filename;
+}
+function insert($data)
+{
+    $util = new Util();
+    $sql = "INSERT INTO Products VALUES ";
+    for ($i = 1; $i < count($data) - 1; $i++) {
+        $sql .= " (NULL,";
+        for ($j = 1; $j < count($data[0]); $j++) {
+            if (is_numeric($data[$i][$j])) {
+                $sql .= "'" . (int) $data[$i][$j] . "'";
+                if ($j != count($data[0]) - 1) {
+                    $sql .= ", ";
+                }
+            } else {
+                $sql .= "'" . $data[$i][$j] . "'";
+                if ($j != count($data[0]) - 1) {
+                    $sql .= ", ";
+                }
+            }
+        }
+        $sql .= ")";
+        if ($i != count($data) - 2) {
+            $sql .= ", ";
+        }
+    }
+    $sql .= ";";
+    // echo $sql;
+    echo $util->query($sql);
 }

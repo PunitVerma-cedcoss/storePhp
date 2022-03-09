@@ -39,6 +39,9 @@ session_start();
         font-size: 3.5rem;
       }
     }
+    .csv td{
+      cursor:cell;
+    }
   </style>
 
 
@@ -118,7 +121,9 @@ session_start();
                   My Orders
                 </a>
               </li>
-                <?php }?>
+                <?php
+            }
+            ?>
                 <li class="nav-item">
                 <a class="nav-link" href="home.php">
                   <span data-feather="file"></span>
@@ -135,7 +140,7 @@ session_start();
           <?php if ($_SESSION["data"]["type"] == "admin") { ?>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group me-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary import"  data-bs-toggle="modal" data-bs-target="#myModal">Import</button>
                 <button type="button" class="btn btn-sm btn-outline-secondary export">Export</button>
               </div>
               <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
@@ -144,6 +149,38 @@ session_start();
               </button>
             </div>
           <?php } ?>
+        </div>
+                <!-- The Modal -->
+        <div class="modal fade" id="myModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+              <!-- Modal Header -->
+              <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+
+              <!-- Modal body -->
+              <div class="modal-body">
+                <form enctype="multipart/form-data">
+                <div class="form-control">
+                  <label for="file">
+                    <input type="file" accept=".csv" id="upload"/>
+                  </label>
+                </div>
+              </form>
+              <div class="renderCsv table-responsive" style="height:50vh;"></div>
+              </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary read">Upload</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+              </div>
+
+            </div>
+          </div>
         </div>
         <?php
         if ($_SESSION["type"] == "admin") {
@@ -291,8 +328,8 @@ session_start();
     </div>
   </div>
 
-
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"> -->
   </script>
 </body>
 
