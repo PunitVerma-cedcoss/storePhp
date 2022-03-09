@@ -57,6 +57,12 @@ class Header
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="home.php">
+              <span data-feather="bar-chart-2"></span>
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link" href="#">
               <span data-feather="bar-chart-2"></span>
               Reports
@@ -87,7 +93,7 @@ class Header
               </a>
             </li>
           <li class="nav-item">
-            <a class="nav-link" href="../home.php">
+            <a class="nav-link" href="home.php">
               <span data-feather="layers"></span>
               shop
             </a>
