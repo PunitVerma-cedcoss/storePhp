@@ -1,5 +1,6 @@
 <?php
 use App\Util;
+use App\Header;
 
 require $_SERVER["DOCUMENT_ROOT"]."/vendor/autoload.php";
 session_start();
@@ -79,55 +80,9 @@ if (!$data) {
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="add-product.php">
-                                <span data-feather="home"></span>
-                                AddProduct
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
-                                <span data-feather="home"></span>
-                                Edit Product
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="file"></span>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="products.php">
-                                <span data-feather="shopping-cart"></span>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="customers.php">
-                                <span data-feather="users"></span>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="bar-chart-2"></span>
-                                Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <span data-feather="layers"></span>
-                                Integrations
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
+        <?php
+        $header = new Header("editProducts");
+        ?>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Update Product</h1>
