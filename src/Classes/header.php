@@ -92,6 +92,12 @@ class Header
                 Dashboard
               </a>
             </li>
+            <li class="nav-item">
+            <a class="nav-link ' . ($this->path == "orders" ? "active" : "") . '" href="Orders.php">
+              <span data-feather="layers"></span>
+              Orders
+            </a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="home.php">
               <span data-feather="layers"></span>
