@@ -1,4 +1,8 @@
 <?php
+
+use App\User;
+
+require $_SERVER["DOCUMENT_ROOT"] . "/vendor/autoload.php";
 if (!isset($_SESSION["user"])) {
     if (isset($_POST["submit"])) {
         $user = new User($_POST["name"], $_POST["password"], $_POST["email"]);

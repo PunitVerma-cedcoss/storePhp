@@ -66,6 +66,7 @@ if (isset($_SESSION["user"])) {
         </label>
       </div>
       <button class="w-100 btn btn-lg btn-primary" name="submit" type="submit">Sign in</button>
+      <p class="mt-3"><a href="register.php">Register</a> here</p>
       <p class="mt-5 mb-3 text-muted">&copy; CEDCOSS Technologies</p>
       <?php
         // include "../src/vendor/autoload.php";
